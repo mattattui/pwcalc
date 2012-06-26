@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="en" manifest="pwcalc.appcache">
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  
+  <title>Password calculator</title>
+  <script src="hmac-sha1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="enc-base64-min.js" type="text/javascript" charset="utf-8"></script>
+  
+  <style type="text/css" media="screen">
+  body
+  {
+    background: #333;
+    color: #ccc;
+    font-family: sans-serif;
+  }
+  a,a:link
+  {
+    color: #6cf;
+  }
+  h1
+  {
+    color: #fff;
+  }
+  input[type=text]
+  {
+    width: 300px;
+    margin-bottom: 1.5em;
+  }
+  #password
+  {
+    font-family: monospace;
+    margin-bottom: 1.5em;
+    min-height: 1.5em;
+    border: 1px solid #666;
+    padding: 0.5em;
+  }
+  </style>
+</head>
+<body>
+  
+  <h1>Password calculator</h1>
+  
+  <form action="#" id="pwform" method="post">
+    <p>
+      <label for="site">Site</label><br><input type="text" name="site" value="" id="site" placeholder="e.g. google"><br>
+      <label for="username">Username</label><br><input type="text" name="username" value="" id="username" placeholder="e.g. bob"><br>
+      <label for="passphrase">Passphrase</label><br><input type="text" name="passphrase" value="" id="passphrase"><br>
+      <input type="submit" name="calculate" value="Calculate" id="calculate"><br>
+    </p>
+  </form>
+  
+  <div class="outputTitle">Calculated password:</div>
+  <div id="password">&nbsp;</div>
+  
+  
+  <p>Notes:</p>
+  <ul>
+    <li>The point of this is to make unique, hard-to-guess passwords for websites, which you don't have to remember yourself. You only have to remember your passphrase, which you can use as often as you like. If the site you're using is hacked and the passwords stolen, the password can't be used to get into any of your other accounts. </li>
+    <li>Passwords are calculated in your browser, never sent over the network.</li>
+    <li>If you want help picking a passphrase, try <a href="http://passphra.se/" title="passphra.se - Generate long, easy-to-remember passwords">http://passphra.se/</a> which is based on this <a href="http://xkcd.com/936/" title="xkcd: Password Strength">XKCD comic strip</a>.</li>
+    <li>"Site" and "username" are just suggestions. You can type anything you like.</li>
+    <li>This isn't 100% safe. In fact I don't make any guarantees at all. I am not a cryptographer. Your browser might be hacked. You could be living in a simulation.</li>
+    <li>The calculation is this: <ul>
+      <li>The data that is hashed is <kbd>sitename:username</kbd>.</li>
+      <li>The output is a modified Base64 representation of the SHA1 HMAC of <kdb>data</kdb> encrypted with <kbd>passphrase</kbd>.</li>
+      <li>Modified Base64 means that <kbd>/</kbd> has been changed to <kbd>_</kbd>, and <kbd>+</kbd> has been changed to <kbd>-</kbd>.</li>
+    </ul></li>
+  </ul>
+  
+  <script type="text/javascript" charset="utf-8">
+  window.addEventListener('load', function (){
+  
+    var form = document.getElementById('pwform');
+    
+    form.addEventListener('submit', function (e){
+      e.preventDefault();
+      
+      var data = document.getElementById('site').value + ':' + document.getElementById('username').value;
+      var passphrase = document.getElementById('passphrase').value;
+      
+      var hash = CryptoJS.HmacSHA1(data, passphrase).toString(CryptoJS.enc.Base64);
+      hash = hash.replace('/','_');
+      hash = hash.replace('+','-');
+
+      document.getElementById('password').innerText = hash;
+
+      return false;
+    });
+
+  });
+    
+  </script>
+</body>
+</html>

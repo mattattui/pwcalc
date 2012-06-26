@@ -1,0 +1,10 @@
+CACHE MANIFEST
+
+# 2012-06-26d
+CACHE:
+index.html
+hmac-sha1.js
+enc-base64-min.js
+
+NETWORK:
+*
