@@ -10,10 +10,12 @@ This is a browser-based password password calculator. It takes a site name, a us
 
 
 
-
-
 ## Credit
 
-The idea of calculating passwords was passed on to me by a friend who probably heard about it from someone else and so on into the mysts of time. It's not a new idea, and it's certainly not my idea, but it's a good one.
+The idea of calculating passwords is a great idea, but it's not my idea.
 
-The password is actually an encrypted hash. Specifically a SHA1 HMAC. The javascript implementation used is from http://code.google.com/p/crypto-js/ 
+The password is actually an encrypted hash. Specifically a SHA1 HMAC. The javascript implementation used is from http://code.google.com/p/crypto-js/ which is new BSD licensed.
+
+Password hashes are generated with the Password Hasher JS from http://wijjo.com/passhash/ -- it's MPL/GPLv2/LGPL. This means you can install that extension and get the same passwords out of it, and some other nice features too (like remembering the settings for each site).
+
+Anything that isn't mentioned above can be assumed to be mine and new BSD licensed.

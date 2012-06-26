@@ -7,6 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   
   <title>Password calculator</title>
+  <script src="passhash.js" type="text/javascript" charset="utf-8"></script>
+
   <script src="hmac-sha1.js" type="text/javascript" charset="utf-8"></script>
   <script src="enc-base64-min.js" type="text/javascript" charset="utf-8"></script>
   
@@ -47,8 +49,11 @@
   <form action="#" id="pwform" method="post">
     <p>
       <label for="site">Site</label><br><input type="text" name="site" value="" id="site" placeholder="e.g. google"><br>
-      <label for="username">Username</label><br><input type="text" name="username" value="" id="username" placeholder="e.g. bob"><br>
-      <label for="passphrase">Passphrase</label><br><input type="text" name="passphrase" value="" id="passphrase"><br>
+      <label for="passphrase">Master passphrase</label><br><input type="text" name="passphrase" value="" id="passphrase"><br>
+      <strong>Length:</strong><br>
+      <label for="length8">8</label><input type="radio" name="pwlength" value="8" id="length8">
+      <label for="length12">12</label><input type="radio" name="pwlength" value="12" id="length12">
+      <label for="length16">16</label><input type="radio" name="pwlength" value="16" id="length16" checked>
       <input type="submit" name="calculate" value="Calculate" id="calculate"><br>
     </p>
   </form>
@@ -59,34 +64,48 @@
   
   <p>Notes:</p>
   <ul>
-    <li>The point of this is to make unique, hard-to-guess passwords for websites, which you don't have to remember yourself. You only have to remember your passphrase, which you can use as often as you like. If the site you're using is hacked and the passwords stolen, the password can't be used to get into any of your other accounts. </li>
+    <li>The point of this is to make unique, hard-to-guess passwords for websites, which you don't have to remember yourself. You only have to remember your master passphrase, which you can use as often as you like. If the site you're using is hacked and the passwords stolen, the password can't be used to get into any of your other accounts. </li>
+    <li>Use the longest generated password that the site allows.</li>
     <li>Passwords are calculated in your browser, never sent over the network.</li>
     <li>If you want help picking a passphrase, try <a href="http://passphra.se/" title="passphra.se - Generate long, easy-to-remember passwords">http://passphra.se/</a> which is based on this <a href="http://xkcd.com/936/" title="xkcd: Password Strength">XKCD comic strip</a>.</li>
-    <li>"Site" and "username" are just suggestions. You can type anything you like.</li>
+    <li>"Site" is just a suggestion. You can type anything you like.</li>
     <li>This isn't 100% safe. In fact I don't make any guarantees at all. I am not a cryptographer. Your browser might be hacked. You could be living in a simulation.</li>
-    <li>The calculation is this: <ul>
-      <li>The data that is hashed is <kbd>sitename:username</kbd>.</li>
-      <li>The output is a modified Base64 representation of the SHA1 HMAC of <kdb>data</kdb> encrypted with <kbd>passphrase</kbd>.</li>
-      <li>Modified Base64 means that <kbd>/</kbd> has been changed to <kbd>_</kbd>, and <kbd>+</kbd> has been changed to <kbd>-</kbd>.</li>
-    </ul></li>
+    <li>The output is a Base64 representation of the SHA1 HMAC of <kdb>site</kdb> encrypted with <kbd>passphrase</kbd>, truncated to the length requested</li>
+    <li>The <a href="https://github.com/inanimatt/pwcalc">source is on GitHub</a>. Fork it, fix it, make a pull request. I'll love you for it.</li>
   </ul>
   
   <script type="text/javascript" charset="utf-8">
+  function b64_hmac_sha1(key, data) {
+    
+    var out = CryptoJS.HmacSHA1(data, key).toString(CryptoJS.enc.Base64);
+    // trim trailing =
+    while (out.substr(-1) == '=') {
+      out = out.substr(0,out.length-1);
+    }
+    return out;
+  }
+
   window.addEventListener('load', function (){
+  
   
     var form = document.getElementById('pwform');
     
     form.addEventListener('submit', function (e){
       e.preventDefault();
       
-      var data = document.getElementById('site').value + ':' + document.getElementById('username').value;
+      var data = document.getElementById('site').value;
       var passphrase = document.getElementById('passphrase').value;
-      
-      var hash = CryptoJS.HmacSHA1(data, passphrase).toString(CryptoJS.enc.Base64);
-      hash = hash.replace('/','_');
-      hash = hash.replace('+','-');
 
-      document.getElementById('password').innerText = hash;
+      var length = 16;
+      if (document.getElementById('length12').checked) {
+        length = 12;
+      } else if (document.getElementById('length8').checked) {
+        length = 8;
+      }
+      
+      var hash = PassHashCommon.generateHashWord(data, passphrase, length, true, true, true, false, false);
+
+      document.getElementById('password').innerText = hash.substr(0,length);
 
       return false;
     });
