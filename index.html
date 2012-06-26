@@ -27,7 +27,8 @@
   {
     color: #fff;
   }
-  input[type=text]
+  input[type=text],
+  input[type=password]
   {
     width: 280px;
     margin-bottom: 1.5em;
@@ -57,7 +58,10 @@
   <form action="#" id="pwform" method="post">
     <p>
       <label for="site">Site</label><br><input type="text" name="site" value="" id="site" placeholder="e.g. google"><br>
-      <label for="passphrase">Master passphrase</label><br><input type="text" name="passphrase" value="" id="passphrase"><br>
+      <label for="passphrase">Master passphrase</label><br><input type="password" name="passphrase" value="" id="passphrase"><br>
+      
+      <p><label for="special">Include special characters</label> <input type="checkbox" name="specialchars" value="1" id="special" checked></p>
+      
       <strong>Length:</strong><br>
       <label for="length8">8</label><input type="radio" name="pwlength" value="8" id="length8">
       <label for="length12">12</label><input type="radio" name="pwlength" value="12" id="length12">
@@ -104,6 +108,8 @@
       var data = document.getElementById('site').value;
       var passphrase = document.getElementById('passphrase').value;
 
+      var restrictSpecial = ! document.getElementById('special').checked;
+
       var length = 16;
       if (document.getElementById('length12').checked) {
         length = 12;
@@ -111,7 +117,7 @@
         length = 8;
       }
       
-      var hash = PassHashCommon.generateHashWord(data, passphrase, length, true, true, true, false, false);
+      var hash = PassHashCommon.generateHashWord(data, passphrase, length, true, true, true, restrictSpecial, false);
 
       document.getElementById('password').innerText = hash.substr(0,length);
 
