@@ -88,26 +88,24 @@
   
   <script type="text/javascript" charset="utf-8">
   function b64_hmac_sha1(key, data) {
-    
     var out = CryptoJS.HmacSHA1(data, key).toString(CryptoJS.enc.Base64);
-    // trim trailing =
+    // PassHash expects a Base64 without padding characters
     while (out.substr(-1) == '=') {
       out = out.substr(0,out.length-1);
     }
     return out;
   }
 
+
   window.addEventListener('load', function (){
-  
-  
+
     var form = document.getElementById('pwform');
     
     form.addEventListener('submit', function (e){
-      e.preventDefault();
-      
+      e.preventDefault(); // Don't actually submit the form
+
       var data = document.getElementById('site').value;
       var passphrase = document.getElementById('passphrase').value;
-
       var restrictSpecial = ! document.getElementById('special').checked;
 
       var length = 16;
