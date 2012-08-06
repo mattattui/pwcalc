@@ -6,9 +6,18 @@
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   
+  <!-- Standard iPhone --> 
+  <link rel="apple-touch-icon" sizes="57x57" href="pwcalc-114.png">
+  <!-- Retina iPhone --> 
+  <link rel="apple-touch-icon" sizes="114x114" href="pwcalc-114.png">
+  <!-- Standard iPad --> 
+  <link rel="apple-touch-icon" sizes="72x72" href="pwcalc-144.png">
+  <!-- Retina iPad --> 
+  <link rel="apple-touch-icon" sizes="144x144" href="pwcalc-144.png">
+  
   <title>Password calculator</title>
-  <script src="passhash.js" type="text/javascript" charset="utf-8"></script>
 
+  <script src="passhash.js" type="text/javascript" charset="utf-8"></script>
   <script src="hmac-sha1.js" type="text/javascript" charset="utf-8"></script>
   <script src="enc-base64-min.js" type="text/javascript" charset="utf-8"></script>
   
@@ -73,16 +82,14 @@
   <div class="outputTitle">Calculated password:</div>
   <div id="password">&nbsp;</div>
   
-  
   <p>Notes:</p>
   <ul>
-    <li>The point of this is to make unique, hard-to-guess passwords for websites, which you don't have to remember yourself. You only have to remember your master passphrase, which you can use as often as you like. If the site you're using is hacked and the passwords stolen, the password can't be used to get into any of your other accounts. </li>
-    <li>Use the longest generated password that the site allows.</li>
+    <li>Do you have trouble remembering lots of different passwords? Do you use the same password on more than one site? If you're human, the answer is probably yes. This tool is an alternative. You only need to remember one safe password (or pass phrase) and use it to calculate a unique, safe password for each site you visit. Every site gets a different password, so it's safer. And you never have to remember it, because you can just calculate it again whenever you want.</li>
     <li>Passwords are calculated in your browser, never sent over the network.</li>
     <li>If you want help picking a passphrase, try <a href="http://passphra.se/" title="passphra.se - Generate long, easy-to-remember passwords">http://passphra.se/</a> which is based on this <a href="http://xkcd.com/936/" title="xkcd: Password Strength">XKCD comic strip</a>.</li>
-    <li>"Site" is just a suggestion. You can type anything you like.</li>
-    <li>This isn't 100% safe. In fact I don't make any guarantees at all. I am not a cryptographer. Your browser might be hacked. You could be living in a simulation.</li>
-    <li>The output is a Base64 representation of the SHA1 HMAC of <kdb>site</kdb> encrypted with <kbd>passphrase</kbd>, truncated to the length requested</li>
+    <li>"Site" is just a suggestion. You can type whatever you want.</li>
+    <li>This is presented without warranty or guarantee of any kind. It might not be 100% safe. I am not a cryptographer. Your browser might be hacked. You could be living in a simulation.</li>
+    <li>Nerdspeak: the output is a (slightly modified) Base64 representation of the SHA1 HMAC of <kbd>site</kbd> encrypted with <kbd>passphrase</kbd>, truncated to the length requested.</li>
     <li>The <a href="https://github.com/inanimatt/pwcalc">source is on GitHub</a>. Fork it, fix it, make a pull request. I'll love you for it.</li>
   </ul>
   

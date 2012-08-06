@@ -1,8 +1,7 @@
 CACHE MANIFEST
 
-# 2012-06-26f
+# 2012-08-06
 CACHE:
-index.html
 hmac-sha1.js
 enc-base64-min.js
 passhash.js
